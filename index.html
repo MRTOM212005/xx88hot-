@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XX88 - SIÊU CỔNG QUỐC TẾ 2026</title>
+    <title>XX88 - CỔNG QUỐC TẾ 2026</title>
     <style>
         /* =========================================
            1. RESET & NỀN NEON DYNAMIC
@@ -12,7 +12,6 @@
         
         body {
             font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-            /* Nền tối sâu với gradient 3D */
             background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
             color: #fff;
             min-height: 100vh;
@@ -24,14 +23,13 @@
             position: relative;
         }
 
-        /* Lớp nền hạt (Particles) hoạt động bằng JS */
         #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            z-index: 1; /* Nằm dưới nội dung */
+            z-index: 1;
         }
 
         .wrapper {
@@ -39,11 +37,11 @@
             width: 100%;
             text-align: center;
             position: relative;
-            z-index: 2; /* Nằm trên nền hạt */
+            z-index: 2;
         }
 
         /* =========================================
-           2. LOGO XX88 - SIÊU NỔI BẬT
+           2. LOGO XX88
            ========================================= */
         .logo-header { margin-bottom: 50px; }
         .logo-box {
@@ -61,7 +59,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Hiệu ứng quét sáng qua logo */
         .logo-box::after {
             content: '';
             position: absolute;
@@ -72,7 +69,7 @@
         }
 
         /* =========================================
-           3. TIÊU ĐỀ - PHONG CÁCH CỰC ĐỘI
+           3. TIÊU ĐỀ
            ========================================= */
         .title-section h1 {
             color: #ffcc00;
@@ -96,13 +93,13 @@
         }
 
         /* =========================================
-           4. GRID CỔNG QUỐC TẾ - SIÊU ĐỘNG
+           4. GRID CỔNG QUỐC TẾ
            ========================================= */
         .gate-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            perspective: 1000px; /* Tạo chiều sâu cho 3D */
+            perspective: 1000px;
         }
 
         .gate-card {
@@ -120,7 +117,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* HIỆU ỨNG HOVER CỰC MẠNH */
         .gate-card:hover {
             transform: translateY(-15px) rotateX(5deg) scale(1.03);
             background: rgba(255, 255, 255, 0.08);
@@ -129,7 +125,7 @@
         }
 
         /* =========================================
-           5. XOAY XOAY QUẢ CẦU & VÒNG NĂNG LƯỢNG
+           5. XOAY XOAY QUẢ CẦU
            ========================================= */
         .sphere-wrapper {
             position: relative;
@@ -141,7 +137,6 @@
             align-items: center;
         }
 
-        /* Quả cầu cờ xoay 3D */
         .flag-sphere {
             width: 110px;
             height: 110px;
@@ -155,32 +150,22 @@
             border: 4px solid rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 2;
-            animation: spin3D 15s linear infinite; /* Xoay 3D */
-        }
-        /* Hiệu ứng bóng đổ trên quả cầu */
-        .flag-sphere::after {
-            content: '';
-            position: absolute;
-            top: 10%; left: 10%; width: 30%; height: 30%;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            filter: blur(5px);
+            animation: spin3D 15s linear infinite;
         }
 
-        /* Vòng năng lượng neon xoay quanh */
         .energy-ring {
             position: absolute;
             width: 140px;
             height: 140px;
             border-radius: 50%;
             border: 3px solid transparent;
-            border-top-color: #00f2fe; /* Màu chính */
+            border-top-color: #00f2fe;
             border-bottom-color: #00f2fe;
-            animation: ringSpin 4s linear infinite; /* Xoay vòng */
+            animation: ringSpin 4s linear infinite;
             z-index: 1;
             filter: drop-shadow(0 0 10px #00f2fe);
         }
-        /* Tạo điểm nhấn trên vòng */
+
         .energy-ring::before, .energy-ring::after {
             content: '';
             position: absolute;
@@ -192,18 +177,14 @@
         .energy-ring::before { top: 10px; left: 10px; }
         .energy-ring::after { bottom: 10px; right: 10px; }
 
-        /* Đổi màu vòng cho Dubai (Vàng) */
         .dubai .energy-ring { border-color: #ffcc00 transparent; filter: drop-shadow(0 0 10px #ffcc00); }
-        /* Đổi màu vòng cho VN (Đỏ) */
         .vietnam .energy-ring { border-color: #ff3366 transparent; filter: drop-shadow(0 0 10px #ff3366); }
 
-        /* Hover: Quả cầu xoay nhanh hơn */
         .gate-card:hover .flag-sphere { animation-duration: 4s; }
-        /* Hover: Vòng xoay nhanh hơn và đổi màu */
         .gate-card:hover .energy-ring { animation-duration: 1s; border-color: #fff transparent; filter: drop-shadow(0 0 15px #fff); }
 
         /* =========================================
-           6. TÊN QUỐC GIA NEON
+           6. TÊN QUỐC GIA
            ========================================= */
         .country-name {
             font-weight: 800;
@@ -218,7 +199,7 @@
         .vietnam .country-name { color: #ff4d4d; text-shadow: 0 0 10px rgba(255, 77, 77, 0.7); }
 
         /* =========================================
-           7. NÚT BẤM - PHONG CÁCH CYBERPUNK
+           7. NÚT BẤM (ĐÃ CẬP NHẬT LINK)
            ========================================= */
         .btn-enter {
             background: transparent;
@@ -236,6 +217,7 @@
             border: 2px solid #00f2fe;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.4), inset 0 0 10px rgba(0, 242, 254, 0.2);
             overflow: hidden;
+            display: inline-block;
         }
 
         .btn-enter:hover {
@@ -244,7 +226,6 @@
             box-shadow: 0 0 30px rgba(0, 242, 254, 0.8);
         }
 
-        /* Màu nút riêng cho từng cổng */
         .dubai .btn-enter { color: #ffcc00; border-color: #ffcc00; box-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
         .dubai .btn-enter:hover { background: #ffcc00; }
 
@@ -254,25 +235,10 @@
         .vietnam .btn-enter { color: #ff4d4d; border-color: #ff4d4d; box-shadow: 0 0 15px rgba(255, 77, 77, 0.4); }
         .vietnam .btn-enter:hover { background: #ff4d4d; }
 
-        /* =========================================
-           8. ANIMATIONS KEYFRAMES
-           ========================================= */
-        @keyframes spin3D {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
-        }
-        @keyframes ringSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-360deg); } /* Xoay ngược */
-        }
-        @keyframes lightSweep {
-            0% { left: -150%; }
-            100% { left: 150%; }
-        }
+        @keyframes spin3D { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        @keyframes ringSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+        @keyframes lightSweep { 0% { left: -150%; } 100% { left: 150%; } }
 
-        /* =========================================
-           9. RESPONSIVE
-           ========================================= */
         @media (max-width: 768px) {
             .logo-box { font-size: 50px; padding: 10px 50px; }
             .title-section h1 { font-size: 32px; }
@@ -311,7 +277,7 @@
                     <div class="flag-sphere" style="background-image: url('https://flagcdn.com/w320/sg.png');"></div>
                 </div>
                 <div class="country-name">HELLO SINGAPORE</div>
-                <a href="https://xx88a.pro/" class="btn-enter">VÀO CỔNG CHÍNH</a>
+                <a href="https://www.xx8811.com/register?affiliateCode=xx88d7d50qc" class="btn-enter">VÀO CỔNG CHÍNH</a>
             </div>
 
             <div class="gate-card dubai">
@@ -320,7 +286,7 @@
                     <div class="flag-sphere" style="background-image: url('https://flagcdn.com/w320/ae.png');"></div>
                 </div>
                 <div class="country-name">DUBAI UAE</div>
-                <a href="https://xx88a.pro/" class="btn-enter">KẾT NỐI NGAY</a>
+                <a href="https://www.xx8811.com/register?affiliateCode=xx88d7d50qc" class="btn-enter">KẾT NỐI NGAY</a>
             </div>
 
             <div class="gate-card thailand">
@@ -329,7 +295,7 @@
                     <div class="flag-sphere" style="background-image: url('https://flagcdn.com/w320/th.png');"></div>
                 </div>
                 <div class="country-name">สวัสดี THAILAND</div>
-                <a href="https://xx88a.pro/" class="btn-enter">TRUY CẬP THÁI</a>
+                <a href="https://www.xx8811.com/register?affiliateCode=xx88d7d50qc" class="btn-enter">TRUY CẬP THÁI</a>
             </div>
 
             <div class="gate-card vietnam">
@@ -338,7 +304,7 @@
                     <div class="flag-sphere" style="background-image: url('https://flagcdn.com/w320/vn.png');"></div>
                 </div>
                 <div class="country-name">XIN CHÀO VIỆT NAM</div>
-                <a href="https://xx88a.pro/" class="btn-enter">CỔNG VIỆT NAM</a>
+                <a href="https://www.xx8811.com/register?affiliateCode=xx88d7d50qc" class="btn-enter">CỔNG VIỆT NAM</a>
             </div>
 
         </div>
@@ -346,11 +312,10 @@
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        /* Cấu hình hiệu ứng hạt nền */
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": ["#00f2fe", "#ffcc00", "#ff3366"] }, /* Màu hạt neon */
+                "color": { "value": ["#00f2fe", "#ffcc00", "#ff3366"] },
                 "shape": { "type": "circle" },
                 "opacity": { "value": 0.5, "random": true },
                 "size": { "value": 3, "random": true },
