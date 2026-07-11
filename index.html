@@ -29,6 +29,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* 1. HIỆU ỨNG ĐÈN NỀN CHẠY THEO CHUỘT */
@@ -914,6 +918,30 @@
         updatePing('ping-ch', 110); updatePing('ping-nl', 115); updatePing('ping-ar', 220); updatePing('ping-mx', 180);
         updatePing('ping-ru', 150); updatePing('ping-in', 80); updatePing('ping-id', 30); updatePing('ping-tw', 25);
         updatePing('ping-se', 125); updatePing('ping-jp', 35);
+
+        // --- BẢO MẬT CHỐNG F12 VÀ COPY MÃ NGUỒN ---
+        // 1. Chặn Right Click (Chuột phải)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Chặn các phím tắt F12, Ctrl+U, Ctrl+C, Ctrl+S, Ctrl+Shift+I, v.v.
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false; // F12
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false; // Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 74) return false; // Ctrl+Shift+J
+            if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U (View Source)
+            if (e.ctrlKey && e.keyCode == 83) return false; // Ctrl+S (Save Page)
+            if (e.ctrlKey && e.keyCode == 67) return false; // Ctrl+C (Copy)
+        };
+
+        // 3. Bẫy Debugger liên tục (Làm treo DevTools nếu cố tình mở bằng cách khác)
+        setInterval(function() {
+            let before = new Date().getTime();
+            debugger;
+            let after = new Date().getTime();
+            if (after - before > 100) {
+                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh; font-family:sans-serif;'>⚠️ HỆ THỐNG PHÁT HIỆN HÀNH VI XÂM NHẬP TRÁI PHÉP ⚠️</h1>";
+            }
+        }, 1000);
     </script>
 </body>
 </html>
