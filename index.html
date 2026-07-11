@@ -69,7 +69,7 @@
         .ticker-content {
             display: flex;
             white-space: nowrap;
-            animation: ticker-move 35s linear infinite;
+            animation: ticker-move 15s linear infinite;
         }
 
         .ticker-item {
@@ -204,6 +204,22 @@
 
         .gate-card:hover::before { opacity: 1; }
 
+        /* Hiệu ứng ánh kim lướt qua thẻ bài (Premium Metal Shine) */
+        .gate-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: skewX(-25deg);
+            animation: metal-shine 6s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @keyframes metal-shine {
+            0%, 60% { left: -150%; }
+            100% { left: 150%; }
+        }
         .card-inner {
             position: absolute;
             inset: 2px;
@@ -232,6 +248,16 @@
         .gate-card:nth-child(18) { --glow-color: #3b82f6; }
         .gate-card:nth-child(19) { --glow-color: #22c55e; }
         .gate-card:nth-child(20) { --glow-color: #14b8a6; }
+        .gate-card:nth-child(21) { --glow-color: #ef4444; }
+        .gate-card:nth-child(22) { --glow-color: #f97316; }
+        .gate-card:nth-child(23) { --glow-color: #38bdf8; }
+        .gate-card:nth-child(24) { --glow-color: #22c55e; }
+        .gate-card:nth-child(25) { --glow-color: #3b82f6; }
+        .gate-card:nth-child(26) { --glow-color: #f59e0b; }
+        .gate-card:nth-child(27) { --glow-color: #ef4444; }
+        .gate-card:nth-child(28) { --glow-color: #3b82f6; }
+        .gate-card:nth-child(29) { --glow-color: #eab308; }
+        .gate-card:nth-child(30) { --glow-color: #ef4444; }
 
         .sphere-box { 
             width: 120px; 
@@ -335,65 +361,6 @@
         .btn-enter:hover::after { background: var(--glow-color, var(--primary)); }
         .btn-enter:hover { color: #000; text-shadow: none; box-shadow: 0 0 20px var(--glow-color, var(--primary)); }
 
-        /* --- BỔ SUNG UI DI ĐỘNG & TRUST INDICATORS --- */
-        /* 6. BANNER TẢI APP */
-        .app-download-banner {
-            position: fixed;
-            top: 60px; /* Ngay dưới thanh ticker */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 600px;
-            background: linear-gradient(90deg, #0f0f1a, #1a1a2e);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            display: none; /* Mặc định ẩn trên Desktop, chỉ hiện trên Mobile */
-            align-items: center;
-            padding: 10px 15px;
-            z-index: 900;
-            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.2);
-            animation: slideDownBanner 1s ease-out;
-        }
-
-        @keyframes slideDownBanner { from { top: -100px; } to { top: 60px; } }
-
-        .banner-app-icon {
-            width: 40px;
-            height: 40px;
-            color: var(--primary);
-            margin-right: 15px;
-            filter: drop-shadow(0 0 10px var(--primary));
-        }
-
-        .app-banner-text {
-            flex-grow: 1;
-            text-align: left;
-        }
-
-        .app-banner-text h4 {
-            font-size: 13px;
-            color: var(--primary);
-            margin-bottom: 3px;
-            text-transform: uppercase;
-        }
-
-        .app-banner-text p {
-            font-size: 11px;
-            color: #aaa;
-        }
-
-        .btn-download-app {
-            background: linear-gradient(45deg, var(--primary), #00a8ff);
-            color: #000;
-            padding: 8px 15px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-            animation: pulse-btn 2s infinite;
-        }
-        @keyframes pulse-btn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
 
         /* 10. VIP LOADER */
@@ -406,16 +373,35 @@
         .vip-loader.active { opacity: 1; pointer-events: all; }
         
         .loader-circle {
-            width: 120px; height: 120px;
+            width: 140px; height: 140px;
             border: 3px solid transparent; border-top-color: var(--primary); border-bottom-color: var(--hot);
-            border-radius: 50%; animation: spin-loader 1s linear infinite; position: absolute;
+            border-radius: 50%; animation: spin-loader 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; position: absolute;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
         }
-        .loader-logo { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 0 15px var(--primary); z-index: 1; }
+        .loader-circle::before, .loader-circle::after {
+            content: ""; position: absolute; border-radius: 50%; border: 3px solid transparent;
+        }
+        .loader-circle::before {
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border-left-color: #ff3366; border-right-color: #ff3366;
+            animation: spin-loader-reverse 2s linear infinite;
+        }
+        .loader-circle::after {
+            top: 25px; left: 25px; right: 25px; bottom: 25px;
+            border-top-color: #4facfe; border-bottom-color: #4facfe;
+            animation: spin-loader 3s linear infinite;
+        }
+        .loader-logo { 
+            position: absolute; font-size: 26px; font-weight: 900; color: #fff; 
+            text-shadow: 0 0 15px var(--primary); z-index: 1; animation: logo-pulse 1.5s infinite alternate;
+        }
         .loader-text {
-            margin-top: 100px; font-family: monospace; font-size: 14px; color: var(--primary);
-            letter-spacing: 3px; animation: blink-text 1s infinite;
+            position: absolute; margin-top: 190px; font-family: monospace; font-size: 14px; color: var(--primary);
+            letter-spacing: 3px; animation: blink-text 1s infinite; text-align: center; width: 100%;
         }
         @keyframes spin-loader { 100% { transform: rotate(360deg); } }
+        @keyframes spin-loader-reverse { 100% { transform: rotate(-360deg); } }
+        @keyframes logo-pulse { 0% { transform: scale(1); text-shadow: 0 0 10px var(--primary); } 100% { transform: scale(1.1); text-shadow: 0 0 30px var(--primary), 0 0 40px #fff; } }
         @keyframes blink-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* 12. RIPPLE BURST */
@@ -469,11 +455,8 @@
         }
 
         @media (max-width: 768px) {
-            .app-download-banner { display: flex; } /* Hiện Banner App */
-            
-            /* Tinh chỉnh lại không gian để không bị che bởi banner và thanh điều hướng */
             .news-ticker-wrap { top: 5px; } /* Đẩy news ticker lên tí */
-            .wrapper { padding-top: 130px; padding-bottom: 80px; }
+            .wrapper { padding-top: 60px; padding-bottom: 80px; }
             
             .logo-container { flex-direction: column; gap: 10px; margin-bottom: 20px; }
             .slogan { border-left: none; padding-left: 0; font-size: 12px; letter-spacing: 1px; }
@@ -484,7 +467,7 @@
             .gate-card h2 { font-size: 10px; letter-spacing: 0px; }
             
             .sphere-box { width: 45px; height: 45px; margin-bottom: 10px; }
-            .sphere { background-size: 90px 100%; animation: spin-globe-mobile 12s linear infinite; }
+            .sphere { background-size: 90px 100%; animation: spin-globe-mobile 12s linear infinite; box-shadow: inset -4px -4px 8px rgba(0,0,0,0.6), inset 2px 2px 8px rgba(255,255,255,0.4); }
             .gate-card:hover .sphere { transform: scale(1.1) rotate(5deg); }
             
             .ping-text { font-size: 9px; margin: 8px 0; }
@@ -557,19 +540,6 @@
         </div>
     </div>
 
-    <!-- 6. BANNER TẢI APP -->
-    <div class="app-download-banner" data-aos="fade-down" data-aos-delay="300">
-        <div class="app-icon-wrap">
-            <svg class="banner-app-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-            </svg>
-        </div>
-        <div class="app-banner-text">
-            <h4>XX88 CHÍNH THỨC</h4>
-            <p>Tải App - Tốc độ X3, Bảo mật 100%</p>
-        </div>
-        <a href="https://xx88new.top/" class="btn-download-app">TẢI NGAY</a>
-    </div>
 
     <div class="wrapper">
         <div class="logo-container" data-aos="zoom-in">
@@ -587,7 +557,7 @@
         </div>
 
         <div class="gate-grid">
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/sg.png');"></div></div>
                 <h2 style="color: var(--primary); letter-spacing: 2px;">SINGAPORE</h2>
@@ -595,7 +565,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ae.png');"></div></div>
                 <h2 style="color: var(--gold); letter-spacing: 2px;">DUBAI UAE</h2>
@@ -603,7 +573,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/th.png');"></div></div>
                 <h2 style="color: var(--thai); letter-spacing: 2px;">ประเทศไทย</h2>
@@ -611,7 +581,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="400">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/vn.png');"></div></div>
                 <h2 style="color: var(--hot); letter-spacing: 2px;">VIỆT NAM</h2>
@@ -619,7 +589,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="500">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ph.png');"></div></div>
                 <h2 style="color: #3b82f6; letter-spacing: 2px;">PILIPINAS</h2>
@@ -627,7 +597,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="600">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/kh.png');"></div></div>
                 <h2 style="color: #dc2626; letter-spacing: 2px;">កម្ពុជា</h2>
@@ -635,7 +605,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="700">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/kr.png');"></div></div>
                 <h2 style="color: #f472b6; letter-spacing: 2px;">대한민국</h2>
@@ -643,7 +613,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="800">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/gb.png');"></div></div>
                 <h2 style="color: #93c5fd; letter-spacing: 2px;">UNITED KINGDOM</h2>
@@ -651,7 +621,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="900">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/us.png');"></div></div>
                 <h2 style="color: #ef4444; letter-spacing: 2px;">UNITED STATES</h2>
@@ -659,7 +629,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1000">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/au.png');"></div></div>
                 <h2 style="color: #fcd34d; letter-spacing: 2px;">AUSTRALIA</h2>
@@ -667,7 +637,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1100">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ca.png');"></div></div>
                 <h2 style="color: #fb7185; letter-spacing: 2px;">CANADA</h2>
@@ -675,7 +645,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1200">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/de.png');"></div></div>
                 <h2 style="color: #eab308; letter-spacing: 2px;">DEUTSCHLAND</h2>
@@ -683,7 +653,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1300">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/mo.png');"></div></div>
                 <h2 style="color: #10b981; letter-spacing: 2px;">澳門</h2>
@@ -691,7 +661,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1400">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/mc.png');"></div></div>
                 <h2 style="color: #ef4444; letter-spacing: 2px;">MONACO</h2>
@@ -699,7 +669,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1500">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/my.png');"></div></div>
                 <h2 style="color: #eab308; letter-spacing: 2px;">MALAYSIA</h2>
@@ -707,7 +677,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1600">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/it.png');"></div></div>
                 <h2 style="color: #22c55e; letter-spacing: 2px;">ITALIA</h2>
@@ -715,7 +685,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1700">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/es.png');"></div></div>
                 <h2 style="color: #f59e0b; letter-spacing: 2px;">ESPAÑA</h2>
@@ -723,7 +693,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1800">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/fr.png');"></div></div>
                 <h2 style="color: #3b82f6; letter-spacing: 2px;">FRANCE</h2>
@@ -731,7 +701,7 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="1900">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/br.png');"></div></div>
                 <h2 style="color: #22c55e; letter-spacing: 2px;">BRASIL</h2>
@@ -739,11 +709,91 @@
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
 
-            <div class="gate-card" data-aos="fade-up" data-aos-delay="2000">
+            <div class="gate-card" data-aos="fade-up">
                 <div class="card-inner"></div>
                 <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/za.png');"></div></div>
                 <h2 style="color: #14b8a6; letter-spacing: 2px;">SUID-AFRIKA</h2>
                 <div class="ping-text" style="color: #14b8a6"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-za">250</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+            
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ch.png');"></div></div>
+                <h2 style="color: #ef4444; letter-spacing: 2px;">SCHWEIZ</h2>
+                <div class="ping-text" style="color: #ef4444"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-ch">110</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/nl.png');"></div></div>
+                <h2 style="color: #f97316; letter-spacing: 2px;">NEDERLAND</h2>
+                <div class="ping-text" style="color: #f97316"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-nl">115</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ar.png');"></div></div>
+                <h2 style="color: #38bdf8; letter-spacing: 2px;">ARGENTINA</h2>
+                <div class="ping-text" style="color: #38bdf8"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-ar">220</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/mx.png');"></div></div>
+                <h2 style="color: #22c55e; letter-spacing: 2px;">MÉXICO</h2>
+                <div class="ping-text" style="color: #22c55e"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-mx">180</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/ru.png');"></div></div>
+                <h2 style="color: #3b82f6; letter-spacing: 2px;">РОССИЯ</h2>
+                <div class="ping-text" style="color: #3b82f6"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-ru">150</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/in.png');"></div></div>
+                <h2 style="color: #f59e0b; letter-spacing: 2px;">भारत</h2>
+                <div class="ping-text" style="color: #f59e0b"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-in">80</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/id.png');"></div></div>
+                <h2 style="color: #ef4444; letter-spacing: 2px;">INDONESIA</h2>
+                <div class="ping-text" style="color: #ef4444"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-id">30</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/tw.png');"></div></div>
+                <h2 style="color: #3b82f6; letter-spacing: 2px;">台灣</h2>
+                <div class="ping-text" style="color: #3b82f6"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-tw">25</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/se.png');"></div></div>
+                <h2 style="color: #eab308; letter-spacing: 2px;">SVERIGE</h2>
+                <div class="ping-text" style="color: #eab308"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-se">125</span>ms</div>
+                <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
+            </div>
+
+            <div class="gate-card" data-aos="fade-up">
+                <div class="card-inner"></div>
+                <div class="sphere-box"><div class="sphere" style="background-image: url('https://flagcdn.com/w640/jp.png');"></div></div>
+                <h2 style="color: #ef4444; letter-spacing: 2px;">日本</h2>
+                <div class="ping-text" style="color: #ef4444"><div class="equalizer"><span></span><span></span><span></span></div> PING: <span id="ping-jp">35</span>ms</div>
                 <a href="https://xx88new.top/" class="btn-enter">VÀO GAME</a>
             </div>
         </div>
@@ -861,6 +911,9 @@
         updatePing('ping-us', 150); updatePing('ping-au', 90); updatePing('ping-ca', 140); updatePing('ping-de', 110);
         updatePing('ping-mo', 15); updatePing('ping-mc', 130); updatePing('ping-my', 25); updatePing('ping-it', 125);
         updatePing('ping-es', 135); updatePing('ping-fr', 115); updatePing('ping-br', 210); updatePing('ping-za', 250);
+        updatePing('ping-ch', 110); updatePing('ping-nl', 115); updatePing('ping-ar', 220); updatePing('ping-mx', 180);
+        updatePing('ping-ru', 150); updatePing('ping-in', 80); updatePing('ping-id', 30); updatePing('ping-tw', 25);
+        updatePing('ping-se', 125); updatePing('ping-jp', 35);
     </script>
 </body>
 </html>
