@@ -495,9 +495,50 @@
         .icon-diamond { filter: drop-shadow(0 0 6px rgba(56, 249, 215, 0.9)); }
         .icon-gift { filter: drop-shadow(0 0 6px rgba(255, 177, 153, 0.9)); }
         .icon-shield { filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.9)); }
+        
+        /* 13. LIVE NOTIFICATIONS */
+        .live-notify-container {
+            position: fixed; bottom: 30px; left: 30px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        }
+        .live-toast {
+            background: rgba(10, 10, 15, 0.9); border-left: 4px solid var(--primary);
+            border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+            transform: translateX(-150%); opacity: 0; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .live-toast.show { transform: translateX(0); opacity: 1; }
+        .toast-icon { font-size: 24px; }
+        .toast-content { display: flex; flex-direction: column; }
+        .toast-title { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+        .toast-msg { font-size: 13px; font-weight: bold; color: #fff; }
+        .toast-amount { color: #4ade80; }
+        
+        /* 14. FOOTER PARTNERS */
+        .footer-partners {
+            width: 100%; max-width: 1200px; margin: 60px auto 30px; padding: 20px;
+            text-align: center; border-top: 1px solid var(--border); z-index: 5; position: relative;
+        }
+        .partner-title { font-size: 12px; color: #888; letter-spacing: 2px; margin-bottom: 20px; }
+        .partner-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 25px; opacity: 1; }
+        .partner-logos img { height: 30px; object-fit: contain; transition: 0.3s; }
+        .partner-logos img:hover { transform: scale(1.1); }
+        .partner-divider { width: 2px; height: 30px; background: var(--border); margin: 0 10px; }
+        .footer-copyright { margin-top: 30px; font-size: 11px; color: #555; letter-spacing: 1px; }
+        
+        @media (max-width: 768px) {
+            .live-notify-container { bottom: 80px; left: 10px; right: 10px; }
+            .live-toast { padding: 10px 15px; }
+            .toast-msg { font-size: 11px; }
+            .partner-logos { gap: 15px; }
+            .partner-logos img { height: 20px; }
+            .partner-divider { display: none; }
+        }
     </style>
 </head>
 <body>
+    <!-- CONTAINER LIVE NOTIFY -->
+    <div class="live-notify-container" id="notify-container"></div>
     <!-- SVG Gradients cho Icon tự code -->
     <svg width="0" height="0" style="position:absolute; visibility:hidden;">
         <defs>
@@ -802,7 +843,24 @@
             </div>
         </div>
 
+    </div>
 
+    <!-- FOOTER ĐỐI TÁC -->
+    <div class="footer-partners" data-aos="fade-up">
+        <div class="partner-title">CÁC CHỨNG NHẬN QUỐC TẾ </div>
+        <div class="partner-logos">
+            <img src="https://midox.co/wp-content/uploads/2025/06/bo-cong-thuong-768x235.jpg" alt="Momo">
+            <img src="https://midox.co/wp-content/uploads/2025/06/pagcor-e1750680956230.webp" alt="ZaloPay">
+            <img src="https://midox.co/wp-content/uploads/2025/06/GLi.webp" alt="Vietcombank">
+            <img src="https://midox.co/wp-content/uploads/2025/06/lien-minh-kjc-e1750681440717-768x383.png" alt="Binance USDT">
+            <div class="partner-divider"></div>
+            <!-- Certifications -->
+            <img src="https://midox.co/wp-content/uploads/2025/06/malta.webp" alt="Malta">
+            <img src="https://midox.co/wp-content/uploads/2025/06/gambling-anh-quoc.webp" alt="BMM" style="height: 25px;">
+        </div>
+        <div class="footer-copyright">
+            © 2026 XX88 Bản Quyền Trí Tuệ. Trò chơi dành cho người chơi đủ 18 tuổi.
+        </div>
     </div>
 
 
@@ -815,6 +873,16 @@
             </svg>
         </div>
         <span class="cskh-text">CSKH</span>
+    </a>
+
+    <!-- NHÓM TELEGRAM NỔI -->
+    <a href="https://t.me/NHACAIUYTINHTOP" target="_blank" class="floating-cskh" style="bottom: 90px;">
+        <div class="cskh-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a5.8 5.8 0 0 0-.056 0zm4.962 7.224c.1-.002.32.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+        </div>
+        <span class="cskh-text">GROUP</span>
     </a>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -934,14 +1002,56 @@
         };
 
         // 3. Bẫy Debugger liên tục (Làm treo DevTools nếu cố tình mở bằng cách khác)
+        // Đã gỡ bỏ màn hình cảnh báo đỏ để thân thiện hơn với người dùng, chỉ chặn ngầm.
         setInterval(function() {
-            let before = new Date().getTime();
             debugger;
-            let after = new Date().getTime();
-            if (after - before > 100) {
-                document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20vh; font-family:sans-serif;'>⚠️ HỆ THỐNG PHÁT HIỆN HÀNH VI XÂM NHẬP TRÁI PHÉP ⚠️</h1>";
-            }
-        }, 1000);
+        }, 500);
+        
+        // --- HỆ THỐNG THÔNG BÁO RÚT TIỀN / NỔ HŨ TRỰC TIẾP ---
+        const notifyContainer = document.getElementById('notify-container');
+        const userNames = ['Nguyễn Văn A', 'Trần Thị B', 'Lê Hoàng C', 'Phạm D', 'Vũ Văn E', 'VIP_88***', 'Hoàng T', 'Đặng Kim M', 'Tony***', 'Rich***', 'Lý T', 'Mai Q'];
+        const actions = [
+            { type: 'Rút tiền thành công', icon: '💸', color: '#4ade80' },
+            { type: 'Nổ hũ siêu to', icon: '🎰', color: '#ffcc00' },
+            { type: 'Thắng cược thể thao', icon: '⚽', color: '#4facfe' },
+            { type: 'Nạp tiền VIP', icon: '💎', color: '#ff3366' }
+        ];
+
+        function createToast() {
+            if(!notifyContainer) return;
+            const user = userNames[Math.floor(Math.random() * userNames.length)];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            const amount = Math.floor(Math.random() * 500 + 5) * 100000; // 500k to 50M
+            
+            const toast = document.createElement('div');
+            toast.className = 'live-toast';
+            toast.style.borderLeftColor = action.color;
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${action.icon}</div>
+                <div class="toast-content">
+                    <span class="toast-title">${action.type}</span>
+                    <span class="toast-msg">${user} vừa nhận <span class="toast-amount" style="color:${action.color}">${amount.toLocaleString('vi-VN')} VNĐ</span></span>
+                </div>
+            `;
+            
+            notifyContainer.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            // Remove toast after 4s
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+            
+            // Lên lịch cho thông báo tiếp theo (từ 5s - 15s)
+            setTimeout(createToast, Math.random() * 10000 + 5000);
+        }
+        
+        // Khởi động hệ thống thông báo sau 3s
+        setTimeout(createToast, 3000);
     </script>
 </body>
 </html>
