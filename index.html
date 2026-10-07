@@ -916,50 +916,74 @@
                 filter: blur(0px) opacity(1);
                 transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            .tf-toggle-wrapper {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(15, 23, 42, 0.75);
-                border: 1px solid rgba(255, 255, 255, 0.14);
-                padding: 5px 12px;
-                border-radius: 999px;
-                cursor: pointer;
-                transition: border-color 0.2s, background 0.2s, transform 0.15s;
-            }
-            .tf-toggle-wrapper:hover {
-                border-color: rgba(0, 242, 254, 0.4);
-                background: rgba(15, 23, 42, 0.95);
-            }
-            .tf-toggle-wrapper:active {
-                transform: scale(0.97);
-            }
-            .tf-toggle-switch {
-                position: relative;
-                width: 36px;
-                height: 20px;
-                background: #334155;
-                border-radius: 999px;
-                transition: background 0.3s;
-                flex-shrink: 0;
-            }
-            .tf-toggle-switch.active {
-                background: linear-gradient(135deg, #00f2fe, #4facfe);
-                box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
-            }
-            .tf-toggle-thumb {
+            /* Security Processing HUD & Modal */
+            .tf-processing-overlay {
                 position: absolute;
-                top: 2px;
-                left: 2px;
-                width: 16px;
-                height: 16px;
-                background: #ffffff;
-                border-radius: 50%;
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                inset: 0;
+                z-index: 50;
+                background: rgba(3, 8, 18, 0.94);
+                backdrop-filter: blur(14px);
+                border-radius: 26px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                animation: tfFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
-            .tf-toggle-switch.active .tf-toggle-thumb {
-                transform: translateX(16px);
+            @keyframes tfFadeIn {
+                from { opacity: 0; transform: scale(0.97); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            .tf-processing-card {
+                width: 100%;
+                max-width: 480px;
+                background: radial-gradient(120% 80% at 50% 0%, rgba(0, 242, 254, 0.12), transparent 70%), linear-gradient(165deg, rgba(14, 28, 48, 0.98), rgba(6, 14, 26, 0.99));
+                border: 1.5px solid rgba(0, 242, 254, 0.4);
+                border-radius: 22px;
+                padding: 26px 24px;
+                box-shadow: 0 0 50px rgba(0, 242, 254, 0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+            }
+            .tf-radar-box {
+                position: relative;
+                width: 76px;
+                height: 76px;
+                border-radius: 50%;
+                border: 2px solid rgba(0, 242, 254, 0.45);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 30px rgba(0, 242, 254, 0.35);
+            }
+            .tf-radar-sweep {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(0, 242, 254, 0.5) 360deg);
+                animation: tfRotateRadar 1.5s linear infinite;
+            }
+            @keyframes tfRotateRadar {
+                to { transform: rotate(360deg); }
+            }
+            .tf-step-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 9px 14px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                transition: all 0.3s ease;
+            }
+            .tf-step-item.active {
+                background: rgba(0, 242, 254, 0.08);
+                border-color: rgba(0, 242, 254, 0.35);
+                box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+                opacity: 1 !important;
+            }
+            .tf-step-item.completed {
+                background: rgba(34, 197, 94, 0.08);
+                border-color: rgba(34, 197, 94, 0.35);
+                opacity: 1 !important;
             }
             .tf-field-label {
                 display: flex;
@@ -1001,6 +1025,14 @@
             .tf-input-field.is-invalid {
                 border-color: #ff3366;
                 background: rgba(255, 51, 102, 0.08);
+            }
+            .tf-input-locked {
+                background: rgba(14, 28, 48, 0.75) !important;
+                border-color: rgba(0, 242, 254, 0.35) !important;
+                color: #00f2fe !important;
+                cursor: default;
+                user-select: none;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
             }
             .tf-quick-pills {
                 display: flex;
@@ -1252,29 +1284,75 @@
                     <!-- Left: Interactive Transfer Card (7 cols) -->
                     <div class="lg:col-span-7 reveal">
                         <div class="tf-card-main relative">
-                            <!-- Top Glow Pill Badge: XX88 | KJC & Nút công tắc che mờ -->
-                            <div class="flex flex-wrap items-center justify-center gap-3.5 mb-6">
-                                <div id="tfBadgeWrapper" class="tf-badge-pill cursor-pointer select-none transition-all duration-300" title="Nhấp để bật/tắt che mờ">
+                            <!-- Top Glow Pill Badge: XX88 | KJC (Nhấp trực tiếp để làm mờ / hiện rõ) -->
+                            <div class="flex justify-center mb-6">
+                                <div id="tfBadgeWrapper" class="tf-badge-pill cursor-pointer select-none transition-all duration-300 hover:scale-105 active:scale-95 hover:border-[#00e1ff] hover:shadow-[0_0_25px_rgba(0,225,255,0.4)]" title="Nhấp để làm mờ / hiện rõ" role="button" tabindex="0">
                                     <div id="tfBadgeContent" class="tf-badge-blur-filter flex items-center justify-center gap-2">
                                         <span class="text-xl font-black text-[#00e1ff] tracking-tight drop-shadow-[0_0_10px_rgba(0,225,255,0.6)]">XX88</span>
                                         <span class="text-muted font-light px-1">|</span>
-                                        <span class="text-xl font-black text-[#ff7700] tracking-wide drop-shadow-[0_0_10px_rgba(255,119,0,0.6)]">KJC</span>
+                                        <span class="text-xl font-black tracking-wide inline-flex items-center">
+                                            <span class="text-[#ff7700] drop-shadow-[0_0_10px_rgba(255,119,0,0.7)]">K</span>
+                                            <span class="text-[#0088ff] drop-shadow-[0_0_10px_rgba(0,136,255,0.7)]">J</span>
+                                            <span class="text-[#22c55e] drop-shadow-[0_0_10px_rgba(34,197,94,0.7)]">C</span>
+                                        </span>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Nút công tắc che mờ -->
-                                <button type="button" id="tfBlurToggleBtn" class="tf-toggle-wrapper select-none" aria-label="Bật/Tắt chế độ che mờ XX88 | KJC" title="Bật/Tắt che mờ">
-                                    <span class="inline-flex items-center justify-center w-4 h-4 text-cyan" id="tfBlurIcon">
-                                        <svg class="w-3.5 h-3.5 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                        </svg>
-                                    </span>
-                                    <span class="text-[11px] font-bold tracking-wider uppercase text-slate-300">Che mờ: <b id="tfBlurStatus" class="text-cyan">BẬT</b></span>
-                                    <div class="tf-toggle-switch active" id="tfToggleSwitchUI" aria-hidden="true">
-                                        <div class="tf-toggle-thumb"></div>
+                            <!-- MODAL XÁC THỰC BẢO MẬT & XỬ LÝ GIAO DỊCH (HIGH-TECH HUD) -->
+                            <div id="tfProcessingModal" class="tf-processing-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Xác thực giao dịch">
+                                <div class="tf-processing-card">
+                                    <!-- Top Security Bar -->
+                                    <div class="flex items-center justify-between border-b border-[rgba(0,242,254,0.2)] pb-3 mb-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                            <span class="text-xs font-mono font-bold text-cyan tracking-widest uppercase">KJC SECURE GATEWAY · 256-BIT SSL</span>
+                                        </div>
+                                        <span class="text-[11px] font-mono text-muted" id="tfTxId">TX-889215</span>
                                     </div>
-                                </button>
+
+                                    <!-- Center Radar Scanner -->
+                                    <div class="my-5 flex flex-col items-center justify-center text-center">
+                                        <div class="tf-radar-box">
+                                            <div class="tf-radar-sweep"></div>
+                                            <svg class="w-8 h-8 text-cyan animate-pulse z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                            </svg>
+                                        </div>
+                                        <h4 class="text-base font-black text-white uppercase tracking-wider mt-4" id="tfProcMainTitle">
+                                            ĐANG XÁC THỰC GIAO DỊCH
+                                        </h4>
+                                        <p class="text-xs text-muted mt-1" id="tfProcSubTitle">
+                                            Hệ thống đang kết nối đường truyền bảo mật cao...
+                                        </p>
+                                    </div>
+
+                                    <!-- Progress Bar -->
+                                    <div class="w-full bg-slate-900/80 rounded-full h-2.5 mb-5 overflow-hidden border border-slate-700/60 p-0.5">
+                                        <div id="tfProcProgressBar" class="h-full rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400 transition-all duration-300" style="width: 15%;"></div>
+                                    </div>
+
+                                    <!-- Step Verification Sequence -->
+                                    <div class="space-y-2.5 text-xs font-mono">
+                                        <div class="tf-step-item active" id="tfStep1">
+                                            <span class="w-4 h-4 flex items-center justify-center" id="tfStepIcon1">
+                                                <svg class="w-3.5 h-3.5 animate-spin text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+                                            </span>
+                                            <span class="text-slate-200">Kết nối máy chủ XX88 & KJC Gateway</span>
+                                            <span class="text-[11px] font-bold text-cyan ml-auto" id="tfStepStatus1">Đang kết nối</span>
+                                        </div>
+                                        <div class="tf-step-item opacity-40" id="tfStep2">
+                                            <span class="w-4 h-4 flex items-center justify-center text-muted" id="tfStepIcon2">○</span>
+                                            <span class="text-slate-400">Kiểm tra quỹ xuất điểm & Mã hóa Cloudflare</span>
+                                            <span class="text-[11px] font-bold text-muted ml-auto" id="tfStepStatus2">Chờ duyệt</span>
+                                        </div>
+                                        <div class="tf-step-item opacity-40" id="tfStep3">
+                                            <span class="w-4 h-4 flex items-center justify-center text-muted" id="tfStepIcon3">○</span>
+                                            <span class="text-slate-400" id="tfStep3Label">Định danh tài khoản nhận & Ký số lệnh</span>
+                                            <span class="text-[11px] font-bold text-muted ml-auto" id="tfStepStatus3">Chờ ký</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- VIEW 1: Form Xử lý chuyển điểm -->
@@ -1285,26 +1363,39 @@
                                 </div>
 
                                 <form id="tfForm" novalidate onsubmit="return false;" class="space-y-4">
-                                    <!-- Field 1: Tài khoản nguồn -->
+                                    <!-- Field 1: Hệ thống xuất điểm (Ví nguồn) -->
                                     <div>
                                         <div class="tf-field-label">
                                             <span class="flex items-center gap-2">
                                                 <span class="tf-icon-box tf-icon-cyan">
                                                     <svg class="tf-icon-svg tf-icon-float" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                        <circle cx="12" cy="7" r="4"></circle>
+                                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                                                     </svg>
                                                     <span class="tf-icon-pulse"></span>
                                                 </span>
-                                                <span>Tài khoản nguồn</span>
+                                                <span>Hệ thống xuất điểm (Ví nguồn)</span>
                                             </span>
-                                            <span class="tf-field-hint">Tối thiểu 4 ký tự</span>
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 border border-emerald-400/30 text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.15)]">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                                Đã xác minh ✓
+                                            </span>
                                         </div>
-                                        <input type="text" id="tfSource" class="tf-input-field" placeholder="Nhập tài khoản nguồn" autocomplete="off" spellcheck="false">
-                                        <div id="tfSourceError" class="tf-error-msg">Tài khoản nguồn phải từ 4 ký tự trở lên!</div>
+                                        <div class="relative flex items-center">
+                                            <input type="text" id="tfSource" class="tf-input-field tf-input-locked pr-28 font-mono font-bold text-cyan tracking-wider" value="XX88_VIP_REWARDS" readonly tabindex="-1" spellcheck="false">
+                                            <div class="absolute right-3.5 flex items-center gap-1.5 pointer-events-none select-none">
+                                                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-md shadow-[0_0_8px_rgba(251,191,36,0.2)]">
+                                                    <svg class="w-3 h-3 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                                    </svg>
+                                                    HỆ THỐNG
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div id="tfSourceError" class="tf-error-msg">Ví hệ thống nguồn hợp lệ.</div>
                                     </div>
 
-                                    <!-- Field 2: Tài khoản đến -->
+                                    <!-- Field 2: Tài khoản nhận điểm -->
                                     <div>
                                         <div class="tf-field-label">
                                             <span class="flex items-center gap-2">
@@ -1316,12 +1407,11 @@
                                                     </svg>
                                                     <span class="tf-icon-pulse"></span>
                                                 </span>
-                                                <span>Tài khoản đến (Nhận điểm)</span>
+                                                <span>Tài khoản nhận điểm</span>
                                             </span>
-                                            <span class="tf-field-hint">Tối thiểu 4 ký tự</span>
                                         </div>
-                                        <input type="text" id="tfTarget" class="tf-input-field" placeholder="Nhập tài khoản nhận điểm" autocomplete="off" spellcheck="false">
-                                        <div id="tfTargetError" class="tf-error-msg">Tài khoản đến phải từ 4 ký tự trở lên!</div>
+                                        <input type="text" id="tfTarget" class="tf-input-field" placeholder="Nhập tên tài khoản nhận điểm" autocomplete="off" spellcheck="false">
+                                        <div id="tfTargetError" class="tf-error-msg">Vui lòng điền tài khoản nhận điểm (từ 4 ký tự trở lên)!</div>
                                     </div>
 
                                     <!-- Field 3: Số điểm nạp / chuyển -->
@@ -1409,11 +1499,11 @@
 
                                 <div class="tf-receipt-card mb-6">
                                     <div class="tf-receipt-row">
-                                        <span class="text-sm text-muted">Tài khoản nguồn:</span>
-                                        <span class="text-base font-bold text-white font-mono" id="tfReceiptSource">chuyendiem123</span>
+                                        <span class="text-sm text-muted">Hệ thống nguồn:</span>
+                                        <span class="text-base font-bold text-cyan font-mono" id="tfReceiptSource">XX88_VIP_REWARDS</span>
                                     </div>
                                     <div class="tf-receipt-row">
-                                        <span class="text-sm text-muted">Tài khoản đến:</span>
+                                        <span class="text-sm text-muted">Tài khoản nhận điểm:</span>
                                         <span class="text-base font-bold text-white font-mono" id="tfReceiptTarget">thanhnhan232</span>
                                     </div>
                                     <div class="tf-receipt-row">
@@ -1450,7 +1540,7 @@
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Tên <strong>tài khoản nguồn</strong> và <strong>tài khoản nhận</strong> phải có độ dài từ <strong>4 ký tự trở lên</strong>.</span>
+                                    <span>Tên <strong>tài khoản nhận điểm</strong> của hội viên phải có độ dài từ <strong>4 ký tự trở lên</strong>.</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
@@ -2531,56 +2621,34 @@
             let isCaptchaLoading = false;
             let isSubmitting = false;
 
-            // Xử lý che mờ / hiện rõ logo XX88 | KJC
+            // Xử lý che mờ / hiện rõ logo XX88 | KJC trực tiếp khi nhấn vào badge
             const badgeWrapper = document.getElementById('tfBadgeWrapper');
             const badgeContent = document.getElementById('tfBadgeContent');
-            const blurToggleBtn = document.getElementById('tfBlurToggleBtn');
-            const toggleSwitchUI = document.getElementById('tfToggleSwitchUI');
-            const blurStatus = document.getElementById('tfBlurStatus');
-            const blurIcon = document.getElementById('tfBlurIcon');
             let isBadgeBlurred = true;
-
-            const lockSvg = `<svg class="w-3.5 h-3.5 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
-            const eyeSvg = `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
 
             function updateBadgeBlurState(blurred) {
                 isBadgeBlurred = blurred;
+                if (!badgeContent) return;
                 if (isBadgeBlurred) {
-                    if (badgeContent) {
-                        badgeContent.classList.add('tf-badge-blur-filter');
-                        badgeContent.classList.remove('tf-badge-clear-filter');
-                    }
-                    if (toggleSwitchUI) toggleSwitchUI.classList.add('active');
-                    if (blurStatus) {
-                        blurStatus.textContent = 'BẬT';
-                        blurStatus.className = 'text-cyan';
-                    }
-                    if (blurIcon) blurIcon.innerHTML = lockSvg;
-                    if (blurToggleBtn) blurToggleBtn.setAttribute('title', 'Đang che mờ (Nhấp để hiện rõ)');
+                    badgeContent.classList.add('tf-badge-blur-filter');
+                    badgeContent.classList.remove('tf-badge-clear-filter');
+                    if (badgeWrapper) badgeWrapper.setAttribute('title', 'Đang che mờ (Nhấp để hiện rõ)');
                 } else {
-                    if (badgeContent) {
-                        badgeContent.classList.remove('tf-badge-blur-filter');
-                        badgeContent.classList.add('tf-badge-clear-filter');
-                    }
-                    if (toggleSwitchUI) toggleSwitchUI.classList.remove('active');
-                    if (blurStatus) {
-                        blurStatus.textContent = 'TẮT';
-                        blurStatus.className = 'text-slate-400';
-                    }
-                    if (blurIcon) blurIcon.innerHTML = eyeSvg;
-                    if (blurToggleBtn) blurToggleBtn.setAttribute('title', 'Đang hiện rõ (Nhấp để che mờ)');
+                    badgeContent.classList.remove('tf-badge-blur-filter');
+                    badgeContent.classList.add('tf-badge-clear-filter');
+                    if (badgeWrapper) badgeWrapper.setAttribute('title', 'Đang hiện rõ (Nhấp để che mờ)');
                 }
-            }
-
-            if (blurToggleBtn) {
-                blurToggleBtn.addEventListener('click', () => {
-                    updateBadgeBlurState(!isBadgeBlurred);
-                });
             }
 
             if (badgeWrapper) {
                 badgeWrapper.addEventListener('click', () => {
                     updateBadgeBlurState(!isBadgeBlurred);
+                });
+                badgeWrapper.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        updateBadgeBlurState(!isBadgeBlurred);
+                    }
                 });
             }
 
@@ -2588,17 +2656,20 @@
                 if (!transferSection) return;
                 transferSection.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
                 setTimeout(() => {
-                    if (sourceInput) sourceInput.focus();
+                    if (targetInput) targetInput.focus();
                 }, 400);
             }
 
             function resetForm() {
                 if (!form) return;
                 form.reset();
-                sourceInput.classList.remove('is-invalid');
+                if (sourceInput) {
+                    sourceInput.value = 'XX88_VIP_REWARDS';
+                    sourceInput.classList.remove('is-invalid');
+                }
                 targetInput.classList.remove('is-invalid');
                 amountInput.classList.remove('is-invalid');
-                sourceError.style.display = 'none';
+                if (sourceError) sourceError.style.display = 'none';
                 targetError.style.display = 'none';
                 amountError.style.display = 'none';
                 captchaError.style.display = 'none';
@@ -2606,6 +2677,9 @@
                 isCaptchaVerified = false;
                 isCaptchaLoading = false;
                 isSubmitting = false;
+
+                const procModal = document.getElementById('tfProcessingModal');
+                if (procModal) procModal.style.display = 'none';
 
                 turnstileBox.classList.remove('verified');
                 turnstileBox.setAttribute('aria-checked', 'false');
@@ -2706,37 +2780,21 @@
                 });
             }
 
-            // Form Submit & Validation
+            // Form Submit & High-Tech HUD Verification Sequence
             if (form) {
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
                     if (isSubmitting) return;
 
                     let isValid = true;
-                    const sourceVal = sourceInput.value.trim();
+                    const sourceVal = 'XX88_VIP_REWARDS';
                     const targetVal = targetInput.value.trim();
                     const amountVal = parseInt(amountInput.value, 10);
 
-                    // 1. Source account: >= 4 characters
-                    if (!sourceVal || sourceVal.length < 4) {
-                        sourceInput.classList.add('is-invalid');
-                        sourceError.textContent = 'Tài khoản nguồn phải từ 4 ký tự trở lên!';
-                        sourceError.style.display = 'block';
-                        isValid = false;
-                    } else {
-                        sourceInput.classList.remove('is-invalid');
-                        sourceError.style.display = 'none';
-                    }
-
-                    // 2. Target account: >= 4 characters
+                    // 1. Target account: >= 4 characters
                     if (!targetVal || targetVal.length < 4) {
                         targetInput.classList.add('is-invalid');
-                        targetError.textContent = 'Tài khoản đến phải từ 4 ký tự trở lên!';
-                        targetError.style.display = 'block';
-                        isValid = false;
-                    } else if (targetVal.toLowerCase() === sourceVal.toLowerCase()) {
-                        targetInput.classList.add('is-invalid');
-                        targetError.textContent = 'Tài khoản đến không được trùng với tài khoản nguồn!';
+                        targetError.textContent = 'Vui lòng điền tài khoản nhận điểm (từ 4 ký tự trở lên)!';
                         targetError.style.display = 'block';
                         isValid = false;
                     } else {
@@ -2744,7 +2802,7 @@
                         targetError.style.display = 'none';
                     }
 
-                    // 3. Amount: 1 <= amount <= 999
+                    // 2. Amount: 1 <= amount <= 999
                     if (isNaN(amountVal) || amountVal < 1 || amountVal > 999) {
                         amountInput.classList.add('is-invalid');
                         amountError.textContent = 'Số điểm nạp tối đa là 999 điểm (từ 1 đến 999)!';
@@ -2755,7 +2813,7 @@
                         amountError.style.display = 'none';
                     }
 
-                    // 4. Captcha verification
+                    // 3. Captcha verification
                     if (!isCaptchaVerified) {
                         captchaError.style.display = 'block';
                         isValid = false;
@@ -2765,13 +2823,100 @@
 
                     if (!isValid) return;
 
-                    // Processing state (Image 2)
+                    // Hiệu ứng xác thực đa tầng bảo mật KJC Secure Gateway
                     isSubmitting = true;
                     submitBtn.disabled = true;
-                    btnText.textContent = 'Đang xử lý giao dịch...';
+                    btnText.textContent = 'Đang kích hoạt KJC Gateway...';
 
+                    const procModal = document.getElementById('tfProcessingModal');
+                    const txIdEl = document.getElementById('tfTxId');
+                    const procMainTitle = document.getElementById('tfProcMainTitle');
+                    const procSubTitle = document.getElementById('tfProcSubTitle');
+                    const procProgressBar = document.getElementById('tfProcProgressBar');
+
+                    const step1 = document.getElementById('tfStep1');
+                    const stepIcon1 = document.getElementById('tfStepIcon1');
+                    const stepStatus1 = document.getElementById('tfStepStatus1');
+
+                    const step2 = document.getElementById('tfStep2');
+                    const stepIcon2 = document.getElementById('tfStepIcon2');
+                    const stepStatus2 = document.getElementById('tfStepStatus2');
+
+                    const step3 = document.getElementById('tfStep3');
+                    const stepIcon3 = document.getElementById('tfStepIcon3');
+                    const step3Label = document.getElementById('tfStep3Label');
+                    const stepStatus3 = document.getElementById('tfStepStatus3');
+
+                    const spinnerSvg = `<svg class="w-3.5 h-3.5 animate-spin text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>`;
+                    const checkSvg = `<svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+                    // 1. Khởi tạo modal xác thực
+                    if (txIdEl) txIdEl.textContent = 'TX-' + Math.floor(100000 + Math.random() * 900000);
+                    if (step3Label) step3Label.textContent = `Định danh tài khoản [${targetVal}] & Ký số lệnh`;
+
+                    if (procProgressBar) procProgressBar.style.width = '20%';
+                    if (procMainTitle) procMainTitle.textContent = 'ĐANG KẾT NỐI HỆ THỐNG KJC';
+                    if (procSubTitle) procSubTitle.textContent = 'Đang thiết lập kênh truyền bảo mật 256-bit SSL...';
+
+                    if (step1) { step1.className = 'tf-step-item active'; }
+                    if (stepIcon1) stepIcon1.innerHTML = spinnerSvg;
+                    if (stepStatus1) { stepStatus1.textContent = 'Đang kết nối'; stepStatus1.className = 'text-[11px] font-bold text-cyan ml-auto'; }
+
+                    if (step2) { step2.className = 'tf-step-item opacity-40'; }
+                    if (stepIcon2) stepIcon2.innerHTML = '○';
+                    if (stepStatus2) { stepStatus2.textContent = 'Chờ duyệt'; stepStatus2.className = 'text-[11px] font-bold text-muted ml-auto'; }
+
+                    if (step3) { step3.className = 'tf-step-item opacity-40'; }
+                    if (stepIcon3) stepIcon3.innerHTML = '○';
+                    if (stepStatus3) { stepStatus3.textContent = 'Chờ ký'; stepStatus3.className = 'text-[11px] font-bold text-muted ml-auto'; }
+
+                    if (procModal) procModal.style.display = 'flex';
+
+                    // Giai đoạn 2 (sau 800ms): Hoàn tất Bước 1, chạy Bước 2
                     setTimeout(() => {
-                        // Success View (Image 1)
+                        if (step1) { step1.className = 'tf-step-item completed'; }
+                        if (stepIcon1) stepIcon1.innerHTML = checkSvg;
+                        if (stepStatus1) { stepStatus1.textContent = 'Đã kết nối ✓'; stepStatus1.className = 'text-[11px] font-bold text-emerald-400 ml-auto'; }
+
+                        if (step2) { step2.className = 'tf-step-item active'; }
+                        if (stepIcon2) stepIcon2.innerHTML = spinnerSvg;
+                        if (stepStatus2) { stepStatus2.textContent = 'Đang kiểm tra'; stepStatus2.className = 'text-[11px] font-bold text-cyan ml-auto'; }
+
+                        if (procProgressBar) procProgressBar.style.width = '55%';
+                        if (procMainTitle) procMainTitle.textContent = 'XÁC THỰC BẢO MẬT HỆ THỐNG';
+                        if (procSubTitle) procSubTitle.textContent = 'Kiểm tra quỹ xuất điểm & mã hóa Cloudflare Enterprise...';
+                    }, 800);
+
+                    // Giai đoạn 3 (sau 1600ms): Hoàn tất Bước 2, chạy Bước 3
+                    setTimeout(() => {
+                        if (step2) { step2.className = 'tf-step-item completed'; }
+                        if (stepIcon2) stepIcon2.innerHTML = checkSvg;
+                        if (stepStatus2) { stepStatus2.textContent = 'Hợp lệ ✓'; stepStatus2.className = 'text-[11px] font-bold text-emerald-400 ml-auto'; }
+
+                        if (step3) { step3.className = 'tf-step-item active'; }
+                        if (stepIcon3) stepIcon3.innerHTML = spinnerSvg;
+                        if (stepStatus3) { stepStatus3.textContent = 'Đang ký số'; stepStatus3.className = 'text-[11px] font-bold text-cyan ml-auto'; }
+
+                        if (procProgressBar) procProgressBar.style.width = '88%';
+                        if (procMainTitle) procMainTitle.textContent = 'KÝ SỐ ĐIỆN TỬ GIAO DỊCH';
+                        if (procSubTitle) procSubTitle.textContent = `Xác thực định danh [${targetVal}] và ký phát hành điểm...`;
+                    }, 1600);
+
+                    // Giai đoạn 4 (sau 2400ms): Hoàn tất Bước 3
+                    setTimeout(() => {
+                        if (step3) { step3.className = 'tf-step-item completed'; }
+                        if (stepIcon3) stepIcon3.innerHTML = checkSvg;
+                        if (stepStatus3) { stepStatus3.textContent = 'Đã ký số ✓'; stepStatus3.className = 'text-[11px] font-bold text-emerald-400 ml-auto'; }
+
+                        if (procProgressBar) procProgressBar.style.width = '100%';
+                        if (procMainTitle) procMainTitle.textContent = 'XÁC THỰC HOÀN TẤT';
+                        if (procSubTitle) procSubTitle.textContent = 'Giao dịch chuyển điểm đã được phê duyệt thành công!';
+                    }, 2400);
+
+                    // Giai đoạn 5 (sau 2800ms): Ẩn modal và xuất biên lai thành công
+                    setTimeout(() => {
+                        if (procModal) procModal.style.display = 'none';
+
                         const now = new Date();
                         const pad = (n) => String(n).padStart(2, '0');
                         const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
@@ -2786,10 +2931,10 @@
                         successView.style.display = 'block';
                         isSubmitting = false;
 
-                        // Also add to live feed at top
+                        // Cập nhật lên Live Feed giao dịch tức thì
                         const feed = document.getElementById('tfLiveFeed');
                         if (feed) {
-                            const maskedSource = sourceVal.slice(0, 3) + '***' + sourceVal.slice(-2);
+                            const maskedSource = 'XX88_VIP';
                             const maskedTarget = targetVal.slice(0, 3) + '***' + targetVal.slice(-2);
                             const newFeedItem = document.createElement('div');
                             newFeedItem.className = 'tf-live-feed-item';
@@ -2808,7 +2953,7 @@
                             feed.prepend(newFeedItem);
                             if (feed.children.length > 5) feed.lastElementChild.remove();
                         }
-                    }, 1200);
+                    }, 2800);
                 });
             }
 
