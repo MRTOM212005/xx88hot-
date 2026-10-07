@@ -1414,7 +1414,7 @@
                                         <div id="tfTargetError" class="tf-error-msg">Vui lòng điền tài khoản nhận điểm (từ 4 ký tự trở lên)!</div>
                                     </div>
 
-                                    <!-- Field 3: Số điểm nạp / chuyển -->
+                                    <!-- Field 3: Số tiền nạp / chuyển (VND) -->
                                     <div>
                                         <div class="tf-field-label">
                                             <span class="flex items-center gap-2">
@@ -1426,32 +1426,27 @@
                                                     </svg>
                                                     <span class="tf-icon-pulse"></span>
                                                 </span>
-                                                <span>Số điểm chuyển</span>
+                                                <span>Số tiền chuyển</span>
                                             </span>
-                                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-gold px-2.5 py-0.5 rounded-full bg-gold/10 border border-gold/30">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-gold animate-ping"></span>
-                                                Tối đa 999 điểm
+                                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-cyan px-2.5 py-0.5 rounded-full bg-cyan/10 border border-cyan/30">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span>
+                                                Đơn vị: VND
                                             </span>
                                         </div>
-                                        <input type="number" id="tfAmount" class="tf-input-field" placeholder="Nhập số điểm cần chuyển (1 - 999)" min="1" max="999" autocomplete="off">
+                                        <input type="text" id="tfAmount" class="tf-input-field" placeholder="Nhập số tiền (VND), VD: 100,000" inputmode="numeric" autocomplete="off">
                                         
-                                        <!-- Quick Pill Buttons -->
+                                        <!-- Quick Pill Buttons (VND) -->
                                         <div class="tf-quick-pills">
                                             <span class="text-xs text-muted self-center mr-1">Chọn nhanh:</span>
-                                            <button type="button" class="tf-pill-btn" data-val="10">+10</button>
-                                            <button type="button" class="tf-pill-btn" data-val="50">+50</button>
-                                            <button type="button" class="tf-pill-btn" data-val="68">+68</button>
-                                            <button type="button" class="tf-pill-btn" data-val="100">+100</button>
-                                            <button type="button" class="tf-pill-btn" data-val="200">+200</button>
-                                            <button type="button" class="tf-pill-btn" data-val="500">+500</button>
-                                            <button type="button" class="tf-pill-btn max-pill inline-flex items-center gap-1" data-val="999">
-                                                <svg class="w-3 h-3 text-gold animate-spin" style="animation-duration: 4s;" viewBox="0 0 24 24" fill="currentColor">
-                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                                                </svg>
-                                                <span>MAX 999</span>
-                                            </button>
+                                            <button type="button" class="tf-pill-btn" data-val="50,000">+50,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="100,000">+100,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="200,000">+200,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="500,000">+500,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="1,000,000">+1,000,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="2,000,000">+2,000,000</button>
+                                            <button type="button" class="tf-pill-btn" data-val="5,000,000">+5,000,000</button>
                                         </div>
-                                        <div id="tfAmountError" class="tf-error-msg">Số điểm nạp tối đa là 999 điểm (từ 1 đến 999)!</div>
+                                        <div id="tfAmountError" class="tf-error-msg">Vui lòng nhập số tiền hợp lệ (tối thiểu 1,000 VND)!</div>
                                     </div>
 
                                     <!-- Cloudflare Turnstile Human Verification Box -->
@@ -1507,8 +1502,8 @@
                                         <span class="text-base font-bold text-white font-mono" id="tfReceiptTarget">thanhnhan232</span>
                                     </div>
                                     <div class="tf-receipt-row">
-                                        <span class="text-sm text-muted">Số điểm chuyển:</span>
-                                        <span class="text-xl font-black text-cyan" id="tfReceiptAmount">68 điểm</span>
+                                        <span class="text-sm text-muted">Số tiền chuyển:</span>
+                                        <span class="text-xl font-black text-cyan" id="tfReceiptAmount">500,000 VND</span>
                                     </div>
                                     <div class="tf-receipt-row">
                                         <span class="text-sm text-muted">Trạng thái:</span>
@@ -1519,7 +1514,7 @@
                                 <p class="text-center text-sm text-muted mb-6">Chúc bạn chơi game vui vẻ!</p>
 
                                 <button type="button" id="tfCloseSuccessBtn" class="tf-action-btn">
-                                    THỰC HIỆN GIAO DỊCH MỚI
+                                     THỰC HIỆN GIAO DỊCH MỚI
                                 </button>
                             </div>
                         </div>
@@ -1540,13 +1535,13 @@
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Tên <strong>tài khoản nhận điểm</strong> của hội viên phải có độ dài từ <strong>4 ký tự trở lên</strong>.</span>
+                                    <span>Bắt buộc tài khoản của hội viên nhận điểm phải là tài khoản mới đăng ký đúng link tổng <strong>X88T.NET</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Số điểm nạp/chuyển mỗi lượt <strong>tối đa 999 điểm</strong> (tỷ lệ quy đổi: 1 điểm = 1,000 VND).</span>
+                                    <span>Đơn vị giao dịch tính bằng <strong>VND</strong>, không giới hạn hạn mức nạp/chuyển.</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
@@ -1585,7 +1580,7 @@
                                         <span class="font-mono font-bold text-slate-300">thanh***232</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+68 điểm</span>
+                                        <span class="font-bold text-cyan">+500,000 VND</span>
                                         <span class="text-[11px] text-muted">Vừa xong</span>
                                     </div>
                                 </div>
@@ -1598,7 +1593,7 @@
                                         <span class="font-mono font-bold text-slate-300">hoang***99</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+150 điểm</span>
+                                        <span class="font-bold text-cyan">+1,000,000 VND</span>
                                         <span class="text-[11px] text-muted">1p trước</span>
                                     </div>
                                 </div>
@@ -1611,7 +1606,7 @@
                                         <span class="font-mono font-bold text-slate-300">kiemtien***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-gold">+999 điểm</span>
+                                        <span class="font-bold text-gold">+2,500,000 VND</span>
                                         <span class="text-[11px] text-muted">2p trước</span>
                                     </div>
                                 </div>
@@ -1624,7 +1619,7 @@
                                         <span class="font-mono font-bold text-slate-300">tai***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+350 điểm</span>
+                                        <span class="font-bold text-cyan">+350,000 VND</span>
                                         <span class="text-[11px] text-muted">3p trước</span>
                                     </div>
                                 </div>
@@ -2752,15 +2747,37 @@
                 });
             }
 
-            // Real-time input handling & validation cleanup
+            // Real-time input handling & validation cleanup (Tự động thêm dấu phẩy định dạng hàng nghìn)
+            function formatNumberCommas(val) {
+                const digits = val.replace(/\D/g, '');
+                if (!digits) return '';
+                return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
             if (amountInput) {
                 amountInput.addEventListener('input', () => {
-                    if (amountInput.value) {
-                        const val = parseInt(amountInput.value, 10);
-                        if (val > 999) {
-                            amountInput.value = 999;
+                    const rawVal = amountInput.value;
+                    const cursorPos = amountInput.selectionStart || 0;
+                    const digitsBeforeCursor = rawVal.slice(0, cursorPos).replace(/\D/g, '').length;
+
+                    const formatted = formatNumberCommas(rawVal);
+                    amountInput.value = formatted;
+
+                    if (digitsBeforeCursor === 0) {
+                        amountInput.setSelectionRange(0, 0);
+                    } else {
+                        let newPos = 0;
+                        let count = 0;
+                        for (let i = 0; i < formatted.length; i++) {
+                            if (/\d/.test(formatted[i])) count++;
+                            if (count === digitsBeforeCursor) {
+                                newPos = i + 1;
+                                break;
+                            }
                         }
+                        amountInput.setSelectionRange(newPos, newPos);
                     }
+
                     amountInput.classList.remove('is-invalid');
                     amountError.style.display = 'none';
                 });
@@ -2789,7 +2806,8 @@
                     let isValid = true;
                     const sourceVal = 'XX88_VIP_REWARDS';
                     const targetVal = targetInput.value.trim();
-                    const amountVal = parseInt(amountInput.value, 10);
+                    const rawAmount = amountInput.value.replace(/\D/g, '');
+                    const amountVal = parseInt(rawAmount, 10);
 
                     // 1. Target account: >= 4 characters
                     if (!targetVal || targetVal.length < 4) {
@@ -2802,10 +2820,10 @@
                         targetError.style.display = 'none';
                     }
 
-                    // 2. Amount: 1 <= amount <= 999
-                    if (isNaN(amountVal) || amountVal < 1 || amountVal > 999) {
+                    // 2. Amount: >= 1,000 VND (Không giới hạn tối đa 999 điểm)
+                    if (isNaN(amountVal) || amountVal < 1000) {
                         amountInput.classList.add('is-invalid');
-                        amountError.textContent = 'Số điểm nạp tối đa là 999 điểm (từ 1 đến 999)!';
+                        amountError.textContent = 'Vui lòng nhập số tiền hợp lệ (tối thiểu 1,000 VND)!';
                         amountError.style.display = 'block';
                         isValid = false;
                     } else {
@@ -2925,7 +2943,7 @@
 
                         receiptSource.textContent = sourceVal;
                         receiptTarget.textContent = targetVal;
-                        receiptAmount.textContent = `${amountVal} điểm`;
+                        receiptAmount.textContent = `${amountVal.toLocaleString('en-US')} VND`;
 
                         formView.style.display = 'none';
                         successView.style.display = 'block';
@@ -2947,7 +2965,7 @@
                                     <span class="font-mono font-bold text-slate-300">${maskedTarget}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-bold text-cyan">+${amountVal} điểm</span>
+                                    <span class="font-bold text-cyan">+${amountVal.toLocaleString('en-US')} VND</span>
                                     <span class="text-[11px] text-emerald-400">Vừa xong</span>
                                 </div>`;
                             feed.prepend(newFeedItem);
@@ -2965,7 +2983,9 @@
                 'khanh***95', 'cuong***11', 'quang***83', 'duc***79', 'minh***68', 'son***24',
                 'yen***88', 'bac***99'
             ];
-            const FEED_POINTS = [10, 20, 35, 50, 68, 88, 100, 120, 150, 200, 250, 300, 368, 500, 688, 777, 888, 999];
+            const FEED_POINTS = [
+                50000, 100000, 200000, 300000, 500000, 800000, 1000000, 1500000, 2000000, 3000000, 5000000, 10000000
+            ];
             const FEED_TIMES = ['Vừa xong', 'Vài giây trước', '10s trước', '15s trước', 'Vừa xong'];
             let lastSourceUser = '';
             let lastTargetUser = '';
@@ -2988,7 +3008,7 @@
 
                 const pts = FEED_POINTS[Math.floor(Math.random() * FEED_POINTS.length)];
                 const timeText = FEED_TIMES[Math.floor(Math.random() * FEED_TIMES.length)];
-                const ptsClass = pts >= 777 ? 'text-gold' : 'text-cyan';
+                const ptsClass = pts >= 2000000 ? 'text-gold' : 'text-cyan';
 
                 const item = document.createElement('div');
                 item.className = 'tf-live-feed-item';
@@ -3001,7 +3021,7 @@
                         <span class="font-mono font-bold text-slate-300">${u2}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="font-bold ${ptsClass}">+${pts} điểm</span>
+                        <span class="font-bold ${ptsClass}">+${pts.toLocaleString('en-US')} VND</span>
                         <span class="text-[11px] text-muted">${timeText}</span>
                     </div>`;
                 feed.prepend(item);
