@@ -49,7 +49,25 @@
             --ease: cubic-bezier(.22, .8, .24, 1);
         }
         html { scroll-behavior: smooth; overflow-x: clip; }
-        body { background: var(--ink); color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        body {
+            background: var(--ink);
+            color: #fff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            user-select: text !important;
+        }
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
         section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
         ::selection { background: rgba(245, 196, 81, .35); }
         :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 10px; }
@@ -390,9 +408,160 @@
             .float-support-text { font-size: 0.55rem; }
         }
     </style>
+
+    <!-- ================= ANTI-INSPECT & ANTI-F12 SECURITY SHIELD ================= -->
+    <script>
+    (function() {
+        'use strict';
+
+        var isManualBlocked = false;
+
+        function showSecurityWarning(manual) {
+            if (manual) isManualBlocked = true;
+            var shield = document.getElementById('tfSecurityShield');
+            if (shield) {
+                shield.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function hideSecurityWarning() {
+            if (isManualBlocked) return;
+            var shield = document.getElementById('tfSecurityShield');
+            if (shield && shield.style.display === 'flex') {
+                var threshold = 160;
+                var widthDiff = window.outerWidth - window.innerWidth > threshold;
+                var heightDiff = window.outerHeight - window.innerHeight > threshold;
+                if (!widthDiff && !heightDiff) {
+                    shield.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+
+        // 1. Chặn toàn bộ phím tắt mở DevTools, View Source, Lưu trang, In ấn
+        window.addEventListener('keydown', function(e) {
+            // F12
+            if (e.keyCode === 123 || e.key === 'F12') {
+                e.preventDefault();
+                e.stopPropagation();
+                showSecurityWarning(true);
+                return false;
+            }
+            // Ctrl+Shift+I / J / C / K (Windows/Linux) hoặc Cmd+Option+I / J / C / K (Mac)
+            if ((e.ctrlKey || e.metaKey) && (e.shiftKey || e.altKey) && (
+                e.key === 'I' || e.key === 'i' ||
+                e.key === 'J' || e.key === 'j' ||
+                e.key === 'C' || e.key === 'c' ||
+                e.key === 'K' || e.key === 'k'
+            )) {
+                e.preventDefault();
+                e.stopPropagation();
+                showSecurityWarning(true);
+                return false;
+            }
+            // Ctrl+U / Cmd+U (View Source)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                e.stopPropagation();
+                showSecurityWarning(true);
+                return false;
+            }
+            // Ctrl+S / Cmd+S (Save Page)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+            // Ctrl+P / Cmd+P (Print)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, true);
+
+        // 2. Chặn chuột phải (Context Menu) chống Inspect / Kiểm tra phần tử
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }, true);
+
+        // 3. Chặn kéo thả ảnh & sao chép nội dung ngoài ô nhập liệu
+        window.addEventListener('copy', function(e) {
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+        }, true);
+        window.addEventListener('cut', function(e) {
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+            e.preventDefault();
+        }, true);
+        window.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        }, true);
+
+        // 4. Vô hiệu hóa và xóa sạch Console logs
+        try {
+            var noop = function() {};
+            ['log', 'debug', 'info', 'warn', 'error', 'table', 'dir', 'trace'].forEach(function(fn) {
+                console[fn] = noop;
+            });
+            setInterval(function() {
+                try { console.clear(); } catch(c) {}
+            }, 1500);
+        } catch(err) {}
+
+        // 5. Bẫy Debugger Trap (Làm treo / đơ trình duyệt nếu ai đó mở DevTools)
+        setInterval(function() {
+            try {
+                (function() {
+                    return false;
+                }['constructor']('debugger')['call']());
+            } catch(e) {}
+        }, 400);
+
+        // 6. Phát hiện DevTools mở (dựa trên chênh lệch kích thước cửa sổ)
+        function checkDevTools() {
+            var threshold = 160;
+            var widthDiff = window.outerWidth - window.innerWidth > threshold;
+            var heightDiff = window.outerHeight - window.innerHeight > threshold;
+            if (widthDiff || heightDiff) {
+                showSecurityWarning();
+            } else {
+                hideSecurityWarning();
+            }
+        }
+        window.addEventListener('resize', checkDevTools);
+        setInterval(checkDevTools, 1000);
+    })();
+    </script>
 </head>
 <body class="no-js font-sans antialiased">
     <script>document.body.classList.remove('no-js');</script>
+
+    <!-- ================= SECURITY SHIELD MODAL (ANTI-INSPECT / F12 HUD) ================= -->
+    <div id="tfSecurityShield" style="display:none;" class="fixed inset-0 z-[999999] bg-[#040812]/95 backdrop-blur-2xl flex items-center justify-center p-4 select-none" role="dialog" aria-modal="true" aria-label="Cảnh báo bảo mật">
+        <div class="max-w-md w-full bg-gradient-to-b from-[#141f33] to-[#070e1a] border-2 border-red-500/50 rounded-3xl p-8 text-center shadow-[0_0_80px_rgba(239,68,68,0.35)] relative overflow-hidden">
+            <div class="w-[72px] h-[72px] mx-auto mb-5 rounded-2xl bg-red-500/10 border border-red-500/40 flex items-center justify-center text-red-400 shadow-[0_0_25px_rgba(239,68,68,0.25)]">
+                <svg class="w-9 h-9 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <span class="inline-block px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-bold tracking-widest uppercase mb-3">
+                KJC CYBER DEFENSE · LEVEL 5
+            </span>
+            <h3 class="text-xl font-black text-white uppercase tracking-wider mb-2">PHÁT HIỆN CAN THIỆP MÃ NGUỒN</h3>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                Chế độ kiểm tra mã nguồn (<strong>F12 / DevTools / Inspect</strong>) đã bị vô hiệu hóa nhằm bảo vệ bản quyền hệ thống <strong>XX88 VIP</strong>. Vui lòng đóng cửa sổ kiểm tra để tiếp tục.
+            </p>
+            <button type="button" onclick="location.reload()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-sm uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-red-500/30">
+                ĐÓNG VÀ TẢI LẠI TRANG
+            </button>
+        </div>
+    </div>
     <a href="#main" class="skip-link">Bỏ qua tới nội dung</a>
 
     <!-- SVG sprite (reusable icons) -->
@@ -1544,7 +1713,7 @@
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Bắt buộc tài khoản của hội viên nhận điểm phải là tài khoản mới đăng ký đúng link tổng <strong id="tfRuleLink" class="tf-badge-blur-filter cursor-pointer px-1.5 py-0.5 rounded bg-cyan/10 border border-cyan/30 text-cyan inline-block transition-all hover:scale-105 select-none" title="Nhấp để làm mờ / hiện rõ">X88T.NET</strong></span>
+                                    <span>Bắt buộc tài khoản của hội viên nhận điểm phải là tài khoản mới đăng ký đúng link tổng .<strong id="tfRuleLink" class="text-cyan font-semibold">Check hợp lệ sẽ cộng điểm ở game</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
@@ -1582,53 +1751,41 @@
                             <div class="space-y-2" id="tfLiveFeed">
                                 <div class="tf-live-feed-item">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-mono font-bold text-slate-300">vip***88</span>
-                                        <span class="tf-stream-arrow text-cyan">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                        </span>
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan/15 text-cyan border border-cyan/30 text-[11px] font-bold">VIP</span>
                                         <span class="font-mono font-bold text-slate-300">thanh***232</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+500,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+368,000 VND</span>
                                         <span class="text-[11px] text-muted">Vừa xong</span>
                                     </div>
                                 </div>
                                 <div class="tf-live-feed-item">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-mono font-bold text-slate-300">chuyen***123</span>
-                                        <span class="tf-stream-arrow text-cyan">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                        </span>
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan/15 text-cyan border border-cyan/30 text-[11px] font-bold">VIP</span>
                                         <span class="font-mono font-bold text-slate-300">hoang***99</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+1,000,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+200,000 VND</span>
                                         <span class="text-[11px] text-muted">1p trước</span>
                                     </div>
                                 </div>
                                 <div class="tf-live-feed-item">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-mono font-bold text-slate-300">daigia***68</span>
-                                        <span class="tf-stream-arrow text-cyan">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                        </span>
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gold/15 text-gold border border-gold/30 text-[11px] font-bold">VIP</span>
                                         <span class="font-mono font-bold text-slate-300">kiemtien***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-gold tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+2,500,000 VND</span>
+                                        <span class="font-bold text-gold tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+1,288,000 VND</span>
                                         <span class="text-[11px] text-muted">2p trước</span>
                                     </div>
                                 </div>
                                 <div class="tf-live-feed-item">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-mono font-bold text-slate-300">minh***79</span>
-                                        <span class="tf-stream-arrow text-cyan">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                        </span>
+                                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan/15 text-cyan border border-cyan/30 text-[11px] font-bold">VIP</span>
                                         <span class="font-mono font-bold text-slate-300">tai***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+350,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+57,000 VND</span>
                                         <span class="text-[11px] text-muted">3p trước</span>
                                     </div>
                                 </div>
@@ -2663,9 +2820,8 @@
                     }
                 };
 
-                // Nhãn hiệu, link tổng, tài khoản nguồn
+                // Nhãn hiệu, tài khoản nguồn
                 applyBlur(badgeContent);
-                applyBlur(ruleLink);
                 applyBlur(sourceInput);
                 applyBlur(receiptSource);
 
@@ -2681,12 +2837,12 @@
                 document.querySelectorAll('.tf-feed-amount').forEach(applyBlur);
 
                 const titleText = isBadgeBlurred ? 'Đang che mờ bảo vệ Live (Nhấp để hiện rõ)' : 'Đang hiện rõ (Nhấp để che mờ)';
-                [badgeWrapper, ruleLink, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPills, quickPillsTitle, receiptAmount].forEach(el => {
+                [badgeWrapper, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPills, quickPillsTitle, receiptAmount].forEach(el => {
                     if (el) el.setAttribute('title', titleText);
                 });
             }
 
-            const blurInteractiveEls = [badgeWrapper, ruleLink, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPillsTitle, receiptAmount];
+            const blurInteractiveEls = [badgeWrapper, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPillsTitle, receiptAmount];
             blurInteractiveEls.forEach(el => {
                 if (el) {
                     el.addEventListener('click', () => {
@@ -3019,16 +3175,12 @@
                         // Cập nhật lên Live Feed giao dịch tức thì
                         const feed = document.getElementById('tfLiveFeed');
                         if (feed) {
-                            const maskedSource = 'XX88_VIP';
                             const maskedTarget = targetVal.slice(0, 3) + '***' + targetVal.slice(-2);
                             const newFeedItem = document.createElement('div');
                             newFeedItem.className = 'tf-live-feed-item';
                             newFeedItem.innerHTML = `
                                 <div class="flex items-center gap-2">
-                                    <span class="font-mono font-bold text-slate-300">${maskedSource}</span>
-                                    <span class="tf-stream-arrow text-cyan">
-                                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                    </span>
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-cyan/15 text-cyan border border-cyan/30 text-[11px] font-bold">VIP</span>
                                     <span class="font-mono font-bold text-slate-300">${maskedTarget}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -3042,50 +3194,61 @@
                 });
             }
 
-            // Simulated background live feed updates - Bổ sung thêm 20 tài khoản mới (Tổng 26 tài khoản luân phiên liên tục)
+            // Simulated background live feed updates - Danh sách 76 tài khoản hội viên VIP & các mốc điểm may mắn
             const FEED_USERS = [
+                // 26 tài khoản ban đầu
                 'anh***88', 'tuan***79', 'phuong***68', 'king***99', 'long***18', 'trang***88',
                 'hoang***66', 'dung***89', 'nam***007', 'linh***92', 'hai***36', 'phuc***77',
                 'viet***99', 'thang***19', 'hien***28', 'thao***86', 'ngoc***38', 'tien***68',
                 'khanh***95', 'cuong***11', 'quang***83', 'duc***79', 'minh***68', 'son***24',
-                'yen***88', 'bac***99'
+                'yen***88', 'bac***99',
+                // 50 tài khoản mới bổ sung thêm
+                'bao***38', 'huyen***68', 'loc***88', 'dat***79', 'phat***88', 'tai***68',
+                'nguyen***38', 'thanh***188', 'vu***288', 'kha***688', 'kim***38', 'van***68',
+                'tai***99', 'thinh***88', 'diep***38', 'trung***68', 'hung***88', 'mai***79',
+                'tam***38', 'khoi***68', 'an***88', 'binh***188', 'giang***288', 'tram***688',
+                'thuy***38', 'chau***68', 'loi***88', 'quyen***79', 'tan***38', 'loi***68',
+                'nhan***88', 'kien***188', 'nghia***288', 'phong***688', 'trinh***38', 'nhung***68',
+                'sang***88', 'huy***79', 'trieu***38', 'thuan***68', 'vinh***88', 'toan***188',
+                'quang***288', 'tam***688', 'quynh***38', 'tuyet***68', 'nghi***88', 'phu***79',
+                'hoa***38', 'dong***68'
             ];
+            // Danh sách chính xác 50 mốc điểm giao dịch theo yêu cầu
             const FEED_POINTS = [
-                50000, 100000, 200000, 300000, 500000, 800000, 1000000, 1500000, 2000000, 3000000, 5000000, 10000000
+                368000, 200000, 1288000, 57000, 500000, 168000, 800000, 247000, 38000, 1000000,
+                425000, 88000, 135000, 600000, 688000, 100000, 273000, 528000, 350000, 1688000,
+                158000, 700000, 238000, 450000, 68000, 320000, 588000, 175000, 900000, 283000,
+                2888000, 125000, 388000, 75000, 215000, 468000, 300000, 628000, 150000, 550000,
+                328000, 250000, 478000, 1200000, 180000, 728000, 400000, 98000, 658000, 168000
             ];
             const FEED_TIMES = ['Vừa xong', 'Vài giây trước', '10s trước', '15s trước', 'Vừa xong'];
-            let lastSourceUser = '';
-            let lastTargetUser = '';
+            let lastUser = '';
 
             setInterval(() => {
                 const feed = document.getElementById('tfLiveFeed');
                 if (!feed) return;
 
-                let u1, u2;
+                let u;
                 do {
-                    u1 = FEED_USERS[Math.floor(Math.random() * FEED_USERS.length)];
-                } while (u1 === lastSourceUser);
+                    u = FEED_USERS[Math.floor(Math.random() * FEED_USERS.length)];
+                } while (u === lastUser);
 
-                do {
-                    u2 = FEED_USERS[Math.floor(Math.random() * FEED_USERS.length)];
-                } while (u2 === u1 || u2 === lastTargetUser);
-
-                lastSourceUser = u1;
-                lastTargetUser = u2;
+                lastUser = u;
 
                 const pts = FEED_POINTS[Math.floor(Math.random() * FEED_POINTS.length)];
                 const timeText = FEED_TIMES[Math.floor(Math.random() * FEED_TIMES.length)];
-                const ptsClass = pts >= 2000000 ? 'text-gold' : 'text-cyan';
+                const isGold = pts >= 1000000;
+                const ptsClass = isGold ? 'text-gold' : 'text-cyan';
+                const badgeClass = isGold 
+                    ? 'bg-gold/15 text-gold border-gold/30' 
+                    : 'bg-cyan/15 text-cyan border-cyan/30';
 
                 const item = document.createElement('div');
                 item.className = 'tf-live-feed-item';
                 item.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <span class="font-mono font-bold text-slate-300">${u1}</span>
-                        <span class="tf-stream-arrow text-cyan">
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        </span>
-                        <span class="font-mono font-bold text-slate-300">${u2}</span>
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full ${badgeClass} border text-[11px] font-bold">VIP</span>
+                        <span class="font-mono font-bold text-slate-300">${u}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="font-bold ${ptsClass} tf-feed-amount tf-live-blur-target ${isBadgeBlurred ? 'tf-badge-blur-filter' : 'tf-badge-clear-filter'} cursor-pointer select-none" title="${isBadgeBlurred ? 'Đang che mờ bảo vệ Live (Nhấp để hiện rõ)' : 'Đang hiện rõ (Nhấp để che mờ)'}">+${pts.toLocaleString('en-US')} VND</span>
