@@ -916,6 +916,15 @@
                 filter: blur(0px) opacity(1);
                 transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
+            .tf-live-blur-active .tf-live-blur-target {
+                filter: blur(6px) opacity(0.32);
+                user-select: none;
+                transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .tf-live-clear-mode .tf-live-blur-target {
+                filter: blur(0px) opacity(1);
+                transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
             /* Security Processing HUD & Modal */
             .tf-processing-overlay {
                 position: absolute;
@@ -1263,7 +1272,7 @@
         </style>
 
         <!-- SECTION: HỆ THỐNG XỬ LÝ CHUYỂN ĐIỂM VIP (XX88 | KJC) -->
-        <section id="transfer" class="relative py-20 sm:py-24 border-t border-[rgba(0,153,255,0.18)]" aria-labelledby="transferSectionTitle">
+        <section id="transfer" class="tf-live-blur-active relative py-20 sm:py-24 border-t border-[rgba(0,153,255,0.18)]" aria-labelledby="transferSectionTitle">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <!-- Section Header -->
                 <div class="reveal text-center">
@@ -1381,7 +1390,7 @@
                                             </span>
                                         </div>
                                         <div class="relative flex items-center">
-                                            <input type="text" id="tfSource" class="tf-input-field tf-input-locked pr-28 font-mono font-bold text-cyan tracking-wider" value="XX88_VIP_REWARDS" readonly tabindex="-1" spellcheck="false">
+                                            <input type="text" id="tfSource" class="tf-input-field tf-input-locked pr-28 font-mono font-bold text-cyan tracking-wider tf-badge-blur-filter cursor-pointer" value="XX88_VIP_REWARDS" readonly tabindex="-1" spellcheck="false" title="Nhấp để làm mờ / hiện rõ">
                                             <div class="absolute right-3.5 flex items-center gap-1.5 pointer-events-none select-none">
                                                 <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-md shadow-[0_0_8px_rgba(251,191,36,0.2)]">
                                                     <svg class="w-3 h-3 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1426,9 +1435,9 @@
                                                     </svg>
                                                     <span class="tf-icon-pulse"></span>
                                                 </span>
-                                                <span>Số tiền chuyển</span>
+                                                <span id="tfAmountLabel" class="tf-badge-blur-filter tf-live-blur-target cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">Số tiền chuyển</span>
                                             </span>
-                                            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-cyan px-2.5 py-0.5 rounded-full bg-cyan/10 border border-cyan/30">
+                                            <span id="tfAmountBadge" class="inline-flex items-center gap-1.5 text-xs font-bold text-cyan px-2.5 py-0.5 rounded-full bg-cyan/10 border border-cyan/30 tf-badge-blur-filter tf-live-blur-target cursor-pointer select-none transition-all hover:scale-105" title="Nhấp để làm mờ / hiện rõ">
                                                 <span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span>
                                                 Đơn vị: VND
                                             </span>
@@ -1436,8 +1445,8 @@
                                         <input type="text" id="tfAmount" class="tf-input-field" placeholder="Nhập số tiền (VND), VD: 100,000" inputmode="numeric" autocomplete="off">
                                         
                                         <!-- Quick Pill Buttons (VND) -->
-                                        <div class="tf-quick-pills">
-                                            <span class="text-xs text-muted self-center mr-1">Chọn nhanh:</span>
+                                        <div class="tf-quick-pills tf-badge-blur-filter tf-live-blur-target" id="tfQuickPills">
+                                            <span id="tfQuickPillsTitle" class="text-xs text-muted self-center mr-1 cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">Chọn nhanh:</span>
                                             <button type="button" class="tf-pill-btn" data-val="50,000">+50,000</button>
                                             <button type="button" class="tf-pill-btn" data-val="100,000">+100,000</button>
                                             <button type="button" class="tf-pill-btn" data-val="200,000">+200,000</button>
@@ -1495,15 +1504,15 @@
                                 <div class="tf-receipt-card mb-6">
                                     <div class="tf-receipt-row">
                                         <span class="text-sm text-muted">Hệ thống nguồn:</span>
-                                        <span class="text-base font-bold text-cyan font-mono" id="tfReceiptSource">XX88_VIP_REWARDS</span>
+                                        <span class="text-base font-bold text-cyan font-mono tf-badge-blur-filter cursor-pointer" id="tfReceiptSource" title="Nhấp để làm mờ / hiện rõ">XX88_VIP_REWARDS</span>
                                     </div>
                                     <div class="tf-receipt-row">
                                         <span class="text-sm text-muted">Tài khoản nhận điểm:</span>
                                         <span class="text-base font-bold text-white font-mono" id="tfReceiptTarget">thanhnhan232</span>
                                     </div>
                                     <div class="tf-receipt-row">
-                                        <span class="text-sm text-muted">Số tiền chuyển:</span>
-                                        <span class="text-xl font-black text-cyan" id="tfReceiptAmount">500,000 VND</span>
+                                        <span class="text-sm text-muted" id="tfReceiptAmountLabel">Số tiền chuyển:</span>
+                                        <span class="text-xl font-black text-cyan tf-badge-blur-filter tf-live-blur-target cursor-pointer select-none" id="tfReceiptAmount" title="Nhấp để làm mờ / hiện rõ">500,000 VND</span>
                                     </div>
                                     <div class="tf-receipt-row">
                                         <span class="text-sm text-muted">Trạng thái:</span>
@@ -1535,13 +1544,13 @@
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Bắt buộc tài khoản của hội viên nhận điểm phải là tài khoản mới đăng ký đúng link tổng <strong>X88T.NET</strong></span>
+                                    <span>Bắt buộc tài khoản của hội viên nhận điểm phải là tài khoản mới đăng ký đúng link tổng <strong id="tfRuleLink" class="tf-badge-blur-filter cursor-pointer px-1.5 py-0.5 rounded bg-cyan/10 border border-cyan/30 text-cyan inline-block transition-all hover:scale-105 select-none" title="Nhấp để làm mờ / hiện rõ">X88T.NET</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
                                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                                     </span>
-                                    <span>Đơn vị giao dịch tính bằng <strong>VND</strong>, không giới hạn hạn mức nạp/chuyển.</span>
+                                    <span>Đơn vị giao dịch tính bằng <strong id="tfRuleUnit" class="tf-badge-blur-filter tf-live-blur-target cursor-pointer px-1 py-0.5 rounded bg-cyan/10 border border-cyan/30 text-cyan inline-block transition-all hover:scale-105 select-none" title="Nhấp để làm mờ / hiện rõ">VND</strong>, không giới hạn hạn mức nạp/chuyển.</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-cyan/15 text-cyan border border-cyan/30 mt-0.5 flex-shrink-0">
@@ -1580,7 +1589,7 @@
                                         <span class="font-mono font-bold text-slate-300">thanh***232</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+500,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+500,000 VND</span>
                                         <span class="text-[11px] text-muted">Vừa xong</span>
                                     </div>
                                 </div>
@@ -1593,7 +1602,7 @@
                                         <span class="font-mono font-bold text-slate-300">hoang***99</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+1,000,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+1,000,000 VND</span>
                                         <span class="text-[11px] text-muted">1p trước</span>
                                     </div>
                                 </div>
@@ -1606,7 +1615,7 @@
                                         <span class="font-mono font-bold text-slate-300">kiemtien***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-gold">+2,500,000 VND</span>
+                                        <span class="font-bold text-gold tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+2,500,000 VND</span>
                                         <span class="text-[11px] text-muted">2p trước</span>
                                     </div>
                                 </div>
@@ -1619,7 +1628,7 @@
                                         <span class="font-mono font-bold text-slate-300">tai***88</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <span class="font-bold text-cyan">+350,000 VND</span>
+                                        <span class="font-bold text-cyan tf-badge-blur-filter tf-live-blur-target tf-feed-amount cursor-pointer select-none" title="Nhấp để làm mờ / hiện rõ">+350,000 VND</span>
                                         <span class="text-[11px] text-muted">3p trước</span>
                                     </div>
                                 </div>
@@ -2616,32 +2625,90 @@
             let isCaptchaLoading = false;
             let isSubmitting = false;
 
-            // Xử lý che mờ / hiện rõ logo XX88 | KJC trực tiếp khi nhấn vào badge
+            // Xử lý che mờ / hiện rõ logo XX88 | KJC, link tổng X88T.NET, số tiền, gợi ý số tiền và thông tin nhạy cảm khi Live
             const badgeWrapper = document.getElementById('tfBadgeWrapper');
             const badgeContent = document.getElementById('tfBadgeContent');
+            const ruleLink = document.getElementById('tfRuleLink');
+            const ruleUnit = document.getElementById('tfRuleUnit');
+            const amountLabel = document.getElementById('tfAmountLabel');
+            const amountBadge = document.getElementById('tfAmountBadge');
+            const quickPills = document.getElementById('tfQuickPills');
+            const quickPillsTitle = document.getElementById('tfQuickPillsTitle');
+            const receiptAmountLabel = document.getElementById('tfReceiptAmountLabel');
             let isBadgeBlurred = true;
 
             function updateBadgeBlurState(blurred) {
                 isBadgeBlurred = blurred;
-                if (!badgeContent) return;
-                if (isBadgeBlurred) {
-                    badgeContent.classList.add('tf-badge-blur-filter');
-                    badgeContent.classList.remove('tf-badge-clear-filter');
-                    if (badgeWrapper) badgeWrapper.setAttribute('title', 'Đang che mờ (Nhấp để hiện rõ)');
-                } else {
-                    badgeContent.classList.remove('tf-badge-blur-filter');
-                    badgeContent.classList.add('tf-badge-clear-filter');
-                    if (badgeWrapper) badgeWrapper.setAttribute('title', 'Đang hiện rõ (Nhấp để che mờ)');
+                const blurClass = 'tf-badge-blur-filter';
+                const clearClass = 'tf-badge-clear-filter';
+
+                if (transferSection) {
+                    if (isBadgeBlurred) {
+                        transferSection.classList.add('tf-live-blur-active');
+                        transferSection.classList.remove('tf-live-clear-mode');
+                    } else {
+                        transferSection.classList.remove('tf-live-blur-active');
+                        transferSection.classList.add('tf-live-clear-mode');
+                    }
                 }
+
+                const applyBlur = (el) => {
+                    if (!el) return;
+                    if (isBadgeBlurred) {
+                        el.classList.add(blurClass);
+                        el.classList.remove(clearClass);
+                    } else {
+                        el.classList.remove(blurClass);
+                        el.classList.add(clearClass);
+                    }
+                };
+
+                // Nhãn hiệu, link tổng, tài khoản nguồn
+                applyBlur(badgeContent);
+                applyBlur(ruleLink);
+                applyBlur(sourceInput);
+                applyBlur(receiptSource);
+
+                // Số tiền, Đơn vị: VND, Gợi ý số tiền
+                applyBlur(amountLabel);
+                applyBlur(amountBadge);
+                applyBlur(quickPills);
+                applyBlur(ruleUnit);
+                applyBlur(receiptAmount);
+                applyBlur(receiptAmountLabel);
+
+                // Các dòng số tiền trong Live Feed
+                document.querySelectorAll('.tf-feed-amount').forEach(applyBlur);
+
+                const titleText = isBadgeBlurred ? 'Đang che mờ bảo vệ Live (Nhấp để hiện rõ)' : 'Đang hiện rõ (Nhấp để che mờ)';
+                [badgeWrapper, ruleLink, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPills, quickPillsTitle, receiptAmount].forEach(el => {
+                    if (el) el.setAttribute('title', titleText);
+                });
             }
 
+            const blurInteractiveEls = [badgeWrapper, ruleLink, sourceInput, receiptSource, amountBadge, amountLabel, ruleUnit, quickPillsTitle, receiptAmount];
+            blurInteractiveEls.forEach(el => {
+                if (el) {
+                    el.addEventListener('click', () => {
+                        updateBadgeBlurState(!isBadgeBlurred);
+                    });
+                }
+            });
+
             if (badgeWrapper) {
-                badgeWrapper.addEventListener('click', () => {
-                    updateBadgeBlurState(!isBadgeBlurred);
-                });
                 badgeWrapper.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
+                        updateBadgeBlurState(!isBadgeBlurred);
+                    }
+                });
+            }
+
+            // Cho phép nhấp vào bất kỳ số tiền nào trong Live Feed để bật/tắt che mờ
+            const liveFeedBox = document.getElementById('tfLiveFeed');
+            if (liveFeedBox) {
+                liveFeedBox.addEventListener('click', (e) => {
+                    if (e.target && e.target.classList.contains('tf-feed-amount')) {
                         updateBadgeBlurState(!isBadgeBlurred);
                     }
                 });
@@ -2965,7 +3032,7 @@
                                     <span class="font-mono font-bold text-slate-300">${maskedTarget}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <span class="font-bold text-cyan">+${amountVal.toLocaleString('en-US')} VND</span>
+                                    <span class="font-bold text-cyan tf-feed-amount tf-live-blur-target ${isBadgeBlurred ? 'tf-badge-blur-filter' : 'tf-badge-clear-filter'} cursor-pointer select-none" title="${isBadgeBlurred ? 'Đang che mờ bảo vệ Live (Nhấp để hiện rõ)' : 'Đang hiện rõ (Nhấp để che mờ)'}">+${amountVal.toLocaleString('en-US')} VND</span>
                                     <span class="text-[11px] text-emerald-400">Vừa xong</span>
                                 </div>`;
                             feed.prepend(newFeedItem);
@@ -3021,7 +3088,7 @@
                         <span class="font-mono font-bold text-slate-300">${u2}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="font-bold ${ptsClass}">+${pts.toLocaleString('en-US')} VND</span>
+                        <span class="font-bold ${ptsClass} tf-feed-amount tf-live-blur-target ${isBadgeBlurred ? 'tf-badge-blur-filter' : 'tf-badge-clear-filter'} cursor-pointer select-none" title="${isBadgeBlurred ? 'Đang che mờ bảo vệ Live (Nhấp để hiện rõ)' : 'Đang hiện rõ (Nhấp để che mờ)'}">+${pts.toLocaleString('en-US')} VND</span>
                         <span class="text-[11px] text-muted">${timeText}</span>
                     </div>`;
                 feed.prepend(item);
